@@ -38,13 +38,14 @@ jobs:
           details: Failure in pokedex app building process!
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Deploy app
+        id: deployment
         if: ${{ github.event_name == 'push'  && !contains(join(github.event.commits.*.message, ' '), '#skip') }}
         run: flyctl deploy --remote-only
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
       - name: Notify of successful deployment via Discord
         uses: rjstone/discord-webhook-notify@v1.0.4
-        if: ${{  success() }}
+        if: ${{  success() && steps.deployment.conclusion == 'success' }}
         with:
           severity: info
           details: New version of pokedex deployed!
