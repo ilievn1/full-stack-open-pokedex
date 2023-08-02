@@ -10,6 +10,10 @@ app.get('/health', (req, res) => {
   res.send('ok')
 })
 
+app.get('/fail', (req, res) => {
+  res.status(400).send({ error: 'fail' })
+})
+
 app.listen(PORT, () => {
   // eslint-disable-next-line no-console
   console.log('server started on port 5000')
